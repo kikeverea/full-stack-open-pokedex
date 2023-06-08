@@ -46,15 +46,6 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Notify build success
-        uses: rjstone/discord-webhook-notify@v1.0.4
-        if: success()
-        with:
-          severity: info
-          text: A new version of Pokedex deployed
-          description: to https://cold-star-519.fly.dev/ by ${{ github.event.pusher.name }}
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
       - name: Notify build failure
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: failure()
@@ -90,5 +81,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: minor
           WITH_V: true
+
+  notify:
+    needs: [ tag_release ]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Notify build success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          text: A new version of Pokedex deployed
+          description: to https://cold-star-519.fly.dev/ by ${{ github.event.pusher.name }}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
 
