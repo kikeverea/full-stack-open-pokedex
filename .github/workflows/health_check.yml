@@ -1,0 +1,22 @@
+name: Health check
+
+#commented schedule out to avoid consuming all monthly free hours
+#on:
+#  schedule:
+#    - cron: '30 17 * * *'
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  health_check:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: https://cold-star-519.fly.dev/health
+          max-attempts: 3
+          retry-delay: 5s
